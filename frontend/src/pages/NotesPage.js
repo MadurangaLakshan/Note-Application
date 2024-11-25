@@ -1,5 +1,6 @@
 import React from 'react'
 import { useEffect } from "react";
+import { Container } from "@mui/material";
 import notesStore from "../stores/notesStore";
 import Notes from '../components/Notes';
 import UpdateForm from '../components/UpdateForm'
@@ -14,11 +15,11 @@ const NotesPage = () => {
     }, [])
 
     return (
-        <div>
-            <Notes />
+        <Container sx={{height:"100vh"}}>
             <UpdateForm />
             <CreateForm />
-        </div>
+            <Notes />    
+        </Container>
     )
 }
 

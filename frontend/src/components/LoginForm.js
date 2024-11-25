@@ -38,7 +38,7 @@ export const LoginForm = () => {
     };
 
     return (
-        <Box 
+        <Box
         sx={{
             display: "flex",
             flexDirection: "column",
