@@ -18,13 +18,22 @@ const notesStore = create((set) => ({
     },
 
 
+    resetUpdateForm: () => {
+        set({
+            updateForm: {
+                _id: null,
+                title: "",
+                body: "",
+            },
+        });
+    },
+
     //Fetch Notes
     fetchNotes: async () => {
         const res = await axios.get('/notes')
 
         set({ notes: res.data.notes })
     },
-
 
     //UpdateCreateFormField
     updateCreateFormField: (e) => {
@@ -58,52 +67,54 @@ const notesStore = create((set) => ({
     },
 
     //CreateNote
-    createNote: async (e) => {
-        e.preventDefault()
-
-        const { createForm, notes } = notesStore.getState()
-
-        const res = await axios.post("/notes", createForm)
-
-        set({
-            notes: [...notes, res.data.note],
-            createForm:
-            {
-                title: "",
-                body: ""
-            },
-        })
+    createNote: async (e, onSuccess) => {
+        e.preventDefault();
+    
+        const { createForm, notes } = notesStore.getState();
+    
+        try {
+            const res = await axios.post("/notes", createForm);
+    
+            set({
+                notes: [...notes, res.data.note],
+                createForm: {
+                    title: "",
+                    body: "",
+                },
+            });
+    
+            if (onSuccess) onSuccess("Note created successfully!"); 
+        } catch (error) {
+            console.error("Error creating note:", error);
+        }
     },
+    
 
-    //UpdateNote
-    updateNote: async (e) => {
-        e.preventDefault()
+    // UpdateNote
+    updateNote: async (e, onSuccess) => {
+    e.preventDefault();
 
-        const { updateForm, notes } = notesStore.getState()
-        const { title, body, _id } = updateForm
+    const { updateForm, notes, resetUpdateForm } = notesStore.getState();
+    const { title, body, _id } = updateForm;
 
-        const res = await axios.put(`/notes/${_id}`, {
-            title,
-            body
-        })
+    try {
+        const res = await axios.put(`/notes/${_id}`, { title, body });
 
         const newNotes = [...notes];
-        const noteIndex = notes.findIndex(note => {
-            return note._id === _id;
-        })
-
+        const noteIndex = notes.findIndex(note => note._id === _id);
         newNotes[noteIndex] = res.data.updatedNote;
 
-        set({
-            notes: newNotes,
-            updateForm: {
-                _id: null,
-                title: "",
-                body: ""
-            }
-        }
-        )
-    },
+        set({ notes: newNotes });
+
+        resetUpdateForm();
+
+        if (onSuccess) onSuccess("Note updated successfully!");
+    } catch (error) {
+        console.error("Error updating note:", error);
+    }
+},
+
+
 
     //DeleteNote
     deleteNote: async (_id) => {
