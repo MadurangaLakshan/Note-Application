@@ -1,20 +1,11 @@
 import { useEffect, useState } from "react";
 import notesStore from "../stores/notesStore";
-import {
-  Box,
-  TextField,
-  Button,
-  Typography,
-  Snackbar,
-  Alert,
-} from "@mui/material";
+import { Box, TextField, Button, Typography } from "@mui/material";
 
-export default function UpdateForm() {
+export default function UpdateForm({ showSuccessNotification }) {
   const store = notesStore();
 
   const [staticTitle, setStaticTitle] = useState(store.updateForm.title);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   useEffect(() => {
     if (store.updateForm._id) {
@@ -23,21 +14,6 @@ export default function UpdateForm() {
   }, [store.updateForm._id]);
 
   const handleCancel = notesStore((state) => state.resetUpdateForm);
-
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
-  };
-
-  const showSuccessNotification = (message) => {
-    setSnackbarMessage(message);
-    setSnackbarOpen(true);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    await store.updateNote(e, showSuccessNotification);
-  };
 
   return (
     store.updateForm._id && (
@@ -59,7 +35,7 @@ export default function UpdateForm() {
           Update Note : <Typography variant="h6">{staticTitle}</Typography>
         </Typography>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={(e) => store.updateNote(e, showSuccessNotification)}>
           <TextField
             name="title"
             label="Title"
@@ -102,21 +78,6 @@ export default function UpdateForm() {
         >
           Cancel
         </Button>
-
-        <Snackbar
-          open={snackbarOpen}
-          autoHideDuration={3000}
-          onClose={handleSnackbarClose}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        >
-          <Alert
-            onClose={handleSnackbarClose}
-            severity="success"
-            sx={{ width: "100%" }}
-          >
-            {snackbarMessage}
-          </Alert>
-        </Snackbar>
       </Box>
     )
   );

@@ -1,15 +1,18 @@
-import React, { useEffect } from 'react'
-import authStore from '../stores/authStore'
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import authStore from "../stores/authStore";
 
-export default function LogoutPage() {
+export default function LogoutPage({ showSuccessNotification }) {
+  const store = authStore();
+  const navigate = useNavigate();
 
-    const store = authStore()
+  useEffect(() => {
+    store.logout(showSuccessNotification);
 
-    useEffect(() => {
-        store.logout()
-    }, [])
-    
-    return (
-        <div>You are now logged out</div>
-    )
+    if (!store.loggedIn === true) {
+      navigate("/login", { replace: true });
+    }
+  }, [store, navigate, showSuccessNotification]);
+
+  return <div>Logging out...</div>;
 }

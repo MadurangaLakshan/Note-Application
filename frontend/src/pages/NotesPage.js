@@ -1,12 +1,12 @@
 import React from "react";
 import { useEffect } from "react";
-import { Container } from "@mui/material";
+import { Alert, Container, Snackbar } from "@mui/material";
 import notesStore from "../stores/notesStore";
 import Notes from "../components/Notes";
 import UpdateForm from "../components/UpdateForm";
 import CreateForm from "../components/CreateForm";
 
-const NotesPage = () => {
+const NotesPage = (showSuccessNotification) => {
   const store = notesStore();
 
   useEffect(() => {
@@ -15,8 +15,8 @@ const NotesPage = () => {
 
   return (
     <Container sx={{ height: "100vh" }}>
-      <UpdateForm />
-      <CreateForm />
+      <UpdateForm showSuccessNotification={showSuccessNotification} />
+      <CreateForm showSuccessNotification={showSuccessNotification} />
       {!store.updateForm._id && <Notes />}
     </Container>
   );

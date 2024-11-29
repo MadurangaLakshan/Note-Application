@@ -7,21 +7,9 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
-import { useState } from "react";
 
-export default function CreateForm() {
+export default function CreateForm({ showSuccessNotification }) {
   const store = notesStore();
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
-  };
-
-  const showSuccessNotification = (message) => {
-    setSnackbarMessage(message);
-    setSnackbarOpen(true);
-  };
 
   return (
     !store.updateForm._id && (
@@ -73,21 +61,6 @@ export default function CreateForm() {
             Create
           </Button>
         </form>
-
-        <Snackbar
-          open={snackbarOpen}
-          autoHideDuration={4000}
-          onClose={handleSnackbarClose}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        >
-          <Alert
-            onClose={handleSnackbarClose}
-            severity="success"
-            sx={{ width: "100%" }}
-          >
-            {snackbarMessage}
-          </Alert>
-        </Snackbar>
       </Box>
     )
   );

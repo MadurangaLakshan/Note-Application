@@ -4,11 +4,30 @@ import SignUpPage from "../pages/SignUpPage";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import RequireAuth from "./RequireAuth";
 import LogoutPage from "../pages/LogoutPage";
-import { AppBar, Button, Toolbar, Typography } from "@mui/material";
+import {
+  Alert,
+  AppBar,
+  Button,
+  Snackbar,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import authStore from "../stores/authStore";
+import { useState } from "react";
 
 function App() {
   const store = authStore();
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+
+  const showSuccessNotification = (message) => {
+    setSnackbarMessage(message);
+    setSnackbarOpen(true);
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
 
   return (
     <div className="App">
@@ -60,10 +79,40 @@ function App() {
               </RequireAuth>
             }
           />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/logout" element={<LogoutPage />} />
+          <Route
+            path="/login"
+            element={
+              <LoginPage showSuccessNotification={showSuccessNotification} />
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              <SignUpPage showSuccessNotification={showSuccessNotification} />
+            }
+          />
+          <Route
+            path="/logout"
+            element={
+              <LogoutPage showSuccessNotification={showSuccessNotification} />
+            }
+          />
         </Routes>
+
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={4000}
+          onClose={handleSnackbarClose}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+          <Alert
+            onClose={handleSnackbarClose}
+            severity="success"
+            sx={{ width: "100%" }}
+          >
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
       </BrowserRouter>
     </div>
   );

@@ -1,8 +1,10 @@
-import React from 'react'
-import { LoginForm } from '../components/LoginForm'
+import React from "react";
+import { LoginForm } from "../components/LoginForm";
 
-export default function LoginPage() {
-    return (
-        <div><LoginForm /></div>
-    )
+export default function LoginPage({ showSuccessNotification }) {
+  return (
+    <div>
+      <LoginForm showSuccessNotification={showSuccessNotification} />
+    </div>
+  );
 }
